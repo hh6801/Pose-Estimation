@@ -46,7 +46,7 @@ To obtain the COCO dataset, you can download it by running the download_data.py 
 To use this codebase, we provide the following models:
 
 1. [Optional] Well-Trained Tokenizers: You can download well-trained PCT tokenizers in the [link](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Esvcc0LSurFLjhPGRJ-ZbSAB61A1q2rFWgePjHygbdwMLA?e=pXgisB).
-2. [Optional] Well-Trained Pose Models: Our well-trained PCT pose models can be found in the [link](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Epf3xVN8lJ9Km4qGQePCKR4Bl809PZXxXJETzWz6LFuFig?e=PbG3Ps).
+2. [Optional] Well-Trained Pose Models: well-trained PCT pose models can be found in the [link](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Epf3xVN8lJ9Km4qGQePCKR4Bl809PZXxXJETzWz6LFuFig?e=PbG3Ps).
 
 Your models directory should look like this:
 
