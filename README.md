@@ -30,7 +30,7 @@ The code is developed using python 3.8 on Ubuntu 16.04. The code is developed an
 
 ### Data Preparation
 
-To obtain the COCO dataset, it can be downloaded from the [COCO download](http://cocodataset.org/#download), and specifically the 2017 train/val files are required. Additionally, the person detection results can be acquired from the [HRNet](https://github.com/leoxiaobin/deep-high-resolution-net.pytorch) repository. The resulting data directory should look like this:
+To obtain the COCO dataset, you can download it by running the download_data.py file or it can be downloaded from the [COCO download](http://cocodataset.org/#download), and specifically the 2017 train/val files are required. Additionally, the person detection results can be acquired from the [HRNet](https://github.com/leoxiaobin/deep-high-resolution-net.pytorch) repository. The resulting data directory should look like this:
 
     ${POSE_ROOT}
     |-- data
@@ -95,7 +95,7 @@ Finally, you can test your model using the script below.
 
 #### Demo
 
-You need to download yolo model to use as detector and then run the test.py file to generate image demos.
+You need to download yolo model to use as detector and then run the test.py file to generate image demo.
 
 
 
