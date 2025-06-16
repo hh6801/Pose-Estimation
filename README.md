@@ -96,7 +96,6 @@ Finally, you can test your model using the script below.
 #### Demo
 
 You need to download yolo model to use as detector and then run the test.py file to generate image demos.
-```
 
 
 
