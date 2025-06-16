@@ -31,16 +31,14 @@ def letterbox(img, size=256):
                                     cv2.BORDER_CONSTANT, value=(128, 128, 128))
     return img_padded, scale, pad_left, pad_top
 
-# Đường dẫn file
+
 IMG_PATH = '/Users/nhh6801/Documents/CDNC1-2-3/CD3/Models/pct/PCT/c.jpg'
 YOLO_MODEL_PATH = '/Users/nhh6801/Documents/CDNC1-2-3/CD3/Models/pct/PCT/yolo11l.pt'
 CONFIG_PATH = '/Users/nhh6801/Documents/CDNC1-2-3/CD3/Models/pct/PCT/configs/pct_base_classifier.py'
 CHECKPOINT_PATH = '/Users/nhh6801/Documents/CDNC1-2-3/CD3/Models/pct/PCT.pth'
-
-# Thiết bị
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# Load ảnh
+
 image = cv2.imread(IMG_PATH)
 orig_h, orig_w = image.shape[:2]
 
@@ -96,7 +94,7 @@ for result in yolo_results:
     if boxes is None or len(boxes) == 0:
         continue
 
-    print(f"🔍 Tổng số box: {len(boxes)}")
+    print(f" Tổng số box: {len(boxes)}")
 
     for box, score, cls_id in zip(boxes.xyxy, boxes.conf, boxes.cls):
         if int(cls_id.item()) != 0 or score.item() < 0.7:
@@ -107,7 +105,7 @@ for result in yolo_results:
         person_img = image[y1:y2, x1:x2]
 
         if person_img.size == 0:
-            print("⚠️ Bỏ qua bbox rỗng")
+            print("Bỏ qua bbox rỗng")
             continue
 
         
@@ -123,51 +121,49 @@ for result in yolo_results:
         input_img = input_img.transpose(2, 0, 1)
         img_tensor = torch.tensor(input_img, dtype=torch.float32).unsqueeze(0).to(DEVICE)
 
-        print(f"➡️ Tensor input shape: {img_tensor.shape}")
+        print(f"Tensor input shape: {img_tensor.shape}")
 
         with torch.no_grad():
             feat = model.backbone(img_tensor)
             feat = feat[0]  # Lấy output cuối cùng từ backbone: [1, 1024, 8, 8]
-            print(f"✅ Backbone output shape: {feat.shape}")
+            print(f"Backbone output shape: {feat.shape}")
 
-            # ⬇️ Truyền qua conv_trans → [1, 256, 8, 8]
+            #  Truyền qua conv_trans → [1, 256, 8, 8]
             cls_feat = model.keypoint_head.conv_trans(feat)
-            print(f"🔹 After conv_trans shape: {cls_feat.shape}")
+            print(f"After conv_trans shape: {cls_feat.shape}")
 
-            # ⬇️ Flatten toàn bộ → [1, 256*8*8] = [1, 16384]
+            # Flatten toàn bộ → [1, 256*8*8] = [1, 16384]
             cls_feat = cls_feat.view(cls_feat.size(0), -1)
-            print(f"🔹 Flattened cls_feat shape: {cls_feat.shape}")
+            print(f"Flattened cls_feat shape: {cls_feat.shape}")
 
-            # ⬇️ Truyền vào FCBlock mixer_trans → [1, 2176]
+            # Truyền vào FCBlock mixer_trans → [1, 2176]
             cls_feat = model.keypoint_head.mixer_trans(cls_feat)
-            print(f"🔹 After mixer_trans shape: {cls_feat.shape}")
+            print(f"After mixer_trans shape: {cls_feat.shape}")
 
-            # ⬇️ Reshape về [B, token_num, hidden_dim] = [1, 34, 64]
+            # Reshape về [B, token_num, hidden_dim] = [1, 34, 64]
             cls_feat = cls_feat.view(cls_feat.size(0),
                                     model.keypoint_head.token_num,
                                     model.keypoint_head.hidden_dim)
-            print(f"🔹 Reshaped for mixer_head: {cls_feat.shape}")
+            print(f"Reshaped for mixer_head: {cls_feat.shape}")
 
-            # ⬇️ Truyền qua các lớp mixer_head
+            # Truyền qua các lớp mixer_head
             for mixer_layer in model.keypoint_head.mixer_head:
                 cls_feat = mixer_layer(cls_feat)
 
-            # ⬇️ Normal hóa
+            # Normalization
             cls_feat = model.keypoint_head.mixer_norm_layer(cls_feat)
 
-            # ⬇️ Dự đoán logits: [1, 34, 2048]
+            # Dự đoán logits: [1, 34, 2048]
             cls_logits = model.keypoint_head.cls_pred_layer(cls_feat)
-            print(f"✅ cls_logits shape: {cls_logits.shape}")
+            print(f"scls_logits shape: {cls_logits.shape}")
 
 
             # Dự đoán keypoints
-            # Đầu vào backbone đã xong:
             with torch.no_grad():
                 pose, _ = model.keypoint_head([feat], [feat], joints=None, train=False)
-            print(f"✅ Pose output shape: {pose.shape}")
-            print(f"🔹 Pose example:\n{pose[0]}")
+            print(f"Pose output shape: {pose.shape}")
+            print(f"Pose example:\n{pose[0]}")
 
-            # 🎯 BẮT ĐẦU THÊM Ở ĐÂY
             keypoints = pose.squeeze(0).cpu().numpy()
             scaled_keypoints = []
 
@@ -181,8 +177,6 @@ for result in yolo_results:
 
 
             pose_results.append(scaled_keypoints)
-            # 🎯 KẾT THÚC THÊM
-
 
 
 skeleton = [
@@ -208,9 +202,7 @@ colors = [
 
 # Vẽ keypoints và skeleton lên ảnh
 for idx, keypoints in enumerate(pose_results):
-    color = colors[idx % len(colors)]  # chọn màu khác nhau
+    color = colors[idx % len(colors)]
     draw_pose_and_skeleton(image, keypoints, skeleton, color)
-
-
 
 cv2.imwrite("pose_result.jpg", image)
