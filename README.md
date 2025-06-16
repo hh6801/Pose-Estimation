@@ -1,9 +1,9 @@
 # Pose estimation with pose as compositional tokens
 
 <div align="center">
-  <img src="results/pose_result.jpg" width="200"/>
-  <img src="results/pose_result2.jpg" width="200"/>
-  <img src="results/pose_result3.jpg" width="200"/>
+  <img src="results/pose_result.jpg" width="200" height="200"/>
+  <img src="results/pose_result2.jpg" width="200" height="200"/>
+  <img src="results/pose_result3.jpg" width="200" height="200"/>
 </div>
 
 ## Usage
