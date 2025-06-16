@@ -1,22 +1,10 @@
 # Pose estimation with pose as compositional tokens
 
-<p align="center">
-  <a href="https://sites.google.com/view/pctpose">Page</a> |
-  <a href="https://arxiv.org/pdf/2303.11638.pdf">Arxiv</a> |
-  <a href="https://www.youtube.com/watch?v=eXt_ONASk5E">Video</a> |
-  <a href="#Environment">Environment</a> |
-  <a href="#Usage">Usage</a> |
-  <a href="#Acknowledge">Acknowledge</a> |
-  <a href='#Citation'>Citation</a> 
-</p>
-
 <div align="center">
-  <img src="demo/demo_0.gif" width="200"/>
-  <img src="demo/demo_1.gif" width="200"/>
+  <img src="results/pose_result.jpg" width="200"/>
+  <img src="results/pose_result2.jpg" width="200"/>
+  <img src="results/pose_result3.jpg" width="200"/>
 </div>
-
-## Environment
-The code is developed using python 3.8 on Ubuntu 16.04. The code is developed and tested using 8 NVIDIA V100 GPU cards. Other platforms are not fully tested.
 
 ## Usage
 ### Installation
