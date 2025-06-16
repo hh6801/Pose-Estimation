@@ -1,4 +1,4 @@
-# Human Pose as Compositional Tokens
+# Pose estimation with pose as compositional tokens
 
 <p align="center">
   <a href="https://sites.google.com/view/pctpose">Page</a> |
@@ -53,15 +53,14 @@ To obtain the COCO dataset, it can be downloaded from the [COCO download](http:/
                     |-- 000000000632.jpg
                     |-- ... 
 
-### Model [Zoo](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/EjGyRWSC7AZFukfefijQsK8ButemCzR8lLOdYWUPg5U2dg?e=4F2oEL)
+### Pretrained models
 
-To use this codebase, we provide the following models and tools:
-1. SimMIM Pretrained Backbone: We provide SimMIM pre-trained swin [models](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/EgtBx4MGIFtKvfugHBycSucBfbsFt92X86HM_fgnzl0Z1w?e=OYsYqy) that you can download. Alternatively, you can use [SimMIM](https://github.com/microsoft/SimMIM) repository to pretrain your own models. (Note: When loading the SimMIM model, it is normal to encounter missing keys in the source state_dict, including relative_coords_table, relative_position_index, and norm3. These missing keys do not affect the results.)
-2. Heatmap Trained Backbone: We offer swin [models](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/EiHuJ2SUpOhEmbuEXS5KkDUBBaeRlz2QyVnEcDwDUuJtwA?e=dCiiP1) that are trained on the COCO dataset with heatmap supervision. If you prefer, you can also train your own swin backbone using the command: `./tools/dist_train.sh configs/hmp_[base/large/huge].py 8`
-3. [Optional] Well-Trained Tokenizers: You can download well-trained PCT tokenizers in the [zoo](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Esvcc0LSurFLjhPGRJ-ZbSAB61A1q2rFWgePjHygbdwMLA?e=pXgisB).
-4. [Optional] Well-Trained Pose Models: Our well-trained PCT pose models can be found in the [zoo](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Epf3xVN8lJ9Km4qGQePCKR4Bl809PZXxXJETzWz6LFuFig?e=PbG3Ps).
+To use this codebase, we provide the following models:
 
-After completing the above steps, your models directory should look like this:
+1. [Optional] Well-Trained Tokenizers: You can download well-trained PCT tokenizers in the [link](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Esvcc0LSurFLjhPGRJ-ZbSAB61A1q2rFWgePjHygbdwMLA?e=pXgisB).
+2. [Optional] Well-Trained Pose Models: Our well-trained PCT pose models can be found in the [link](https://mailustceducn-my.sharepoint.com/:f:/g/personal/aa397601_mail_ustc_edu_cn/Epf3xVN8lJ9Km4qGQePCKR4Bl809PZXxXJETzWz6LFuFig?e=PbG3Ps).
+
+Your models directory should look like this:
 
     ${POSE_ROOT}
     |-- weights
@@ -94,35 +93,10 @@ Finally, you can test your model using the script below.
 ./tools/dist_test.sh configs/pct_[base/large/huge]_classifier.py work_dirs/pct_[base/large/huge]_classifier/epoch_210.pth 8 --cfg-options data.test.data_cfg.use_gt_bbox=False
 ```
 
-#### Remove image guidance
-Additionally, you can choose a cleaner PCT that removes image guidance. The benefit of this approach is that it doesn't require features from a backbone trained on COCO with heatmap supervision. Instead, it directly converts joint coordinates into compositional tokens, making it easier to perform various visualization and analysis tasks. This approach has a slightly reduced performance impact.
-```
-./tools/dist_train.sh configs/pct_base_woimgguide_tokenizer.py 8
-./tools/dist_train.sh configs/pct_base_woimgguide_classifier.py 8
-```
-
 #### Demo
 
-You need to install mmdet==2.26.0 and mmcv-full==1.7.0, and then use the following command to generate some image demos.
-```
-PYTHONPATH="$(dirname $0)/..":$PYTHONPATH python vis_tools/demo_img_with_mmdet.py vis_tools/cascade_rcnn_x101_64x4d_fpn_coco.py https://download.openmmlab.com/mmdetection/v2.0/cascade_rcnn/cascade_rcnn_x101_64x4d_fpn_20e_coco/cascade_rcnn_x101_64x4d_fpn_20e_coco_20200509_224357-051557b1.pth configs/pct_[base/large/huge]_classifier.py weights/pct/swin_[base/large/huge].pth --img-root images/ --img your_image.jpg --out-img-root images/ --thickness 2
+You need to download yolo model to use as detector and then run the test.py file to generate image demos.
 ```
 
-## Acknowledge
 
-Thanks to 
-- [MMPose](https://github.com/open-mmlab/mmpose)
-- [HRNet](https://github.com/HRNet)
-- [VQVAE](https://github.com/zalandoresearch/pytorch-vq-vae)
-- [MLPMixer](https://github.com/920232796/MlpMixer-pytorch)
 
-## Citation
-
-```
-@inproceedings{Geng23PCT,
-	author={Zigang Geng and Chunyu Wang and Yixuan Wei and Ze Liu and Houqiang Li and Han Hu},
-	title={Human Pose as Compositional Tokens},
-	booktitle={{CVPR}},
-	year={2023}, 
-}
-```
