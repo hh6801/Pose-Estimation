@@ -61,7 +61,7 @@ Your models directory should look like this:
         `-- pct [Optional]
             `-- swin_[base/large/huge].pth 
 
-### PCT
+### Training PCT
 
 #### Stage I: Training Tokenizer
 
